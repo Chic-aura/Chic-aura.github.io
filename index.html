@@ -161,6 +161,33 @@ input:focus,select:focus,textarea:focus{border-color:var(--mg)}
 footer{border-top:3px solid var(--yl);padding:34px 14px}footer .logo{font-size:2.1rem}
 .flor{width:.62em;height:.62em;vertical-align:.12em;margin:0 .14em;display:inline-block}
 .toast{border-radius:0;letter-spacing:.06em}
+
+/* ---- Catálogo con barra lateral, detalle, administración ---- */
+.shop{display:grid;grid-template-columns:250px 1fr;gap:36px;align-items:start;margin-top:26px}
+.side{position:sticky;top:130px;max-height:calc(100vh - 150px);overflow:auto;padding-right:6px}
+.fbtn{display:none;width:100%}
+.fp .eb{margin:22px 0 8px}
+.cat{display:flex;justify-content:space-between;align-items:center;width:100%;background:none;border:0;border-bottom:1px solid var(--bd);padding:11px 4px;font:500 .76rem "Jost",sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--tx);cursor:pointer;text-align:left}
+.cat.on{box-shadow:inset 3px 0 0 var(--yl);padding-left:12px;background:linear-gradient(90deg,var(--pks),transparent)}
+.cat i{font-style:normal;font-size:1.1rem}
+.sub{display:flex;gap:8px;padding:10px 4px 12px}.sub .gbtn{flex:1;max-width:none;padding:9px 4px;min-height:38px}
+.ck{display:flex;gap:8px;align-items:center;font-weight:400;font-size:.9rem;margin:10px 0}.ck input{width:auto;min-height:0}
+.rhead{display:flex;align-items:baseline;gap:4px}.shop .grid{margin-top:14px}
+@media(max-width:800px){.shop{grid-template-columns:1fr;gap:18px}.side{position:static;max-height:none}.fbtn{display:block}.fp{display:none}.fp.open{display:block;margin-top:12px}}
+.old{color:var(--mu);font-weight:400;font-size:.85em}
+.bdg{position:absolute;top:8px;left:8px;display:flex;flex-direction:column;gap:4px;align-items:flex-start;z-index:1}
+.bdg .badge{position:static;margin:0}.badge.n{background:var(--tx);color:#fff}
+.card .ph{cursor:zoom-in}.card .btn{margin-top:8px}
+.mo{position:fixed;inset:0;background:#3a153099;z-index:60;display:grid;place-items:center;padding:14px;overflow:auto}
+.mp{background:#fff;max-width:780px;width:100%;display:grid;grid-template-columns:1fr 1fr;position:relative;border-radius:6px;overflow:hidden}
+.mp .ph{aspect-ratio:auto;min-height:320px;height:100%}.mi{padding:28px 22px}.mi h2{margin:.1em 0 .2em}
+.x{position:absolute;top:8px;right:8px;z-index:2;width:38px;height:38px;border-radius:50%;border:0;background:#fffe;cursor:pointer}
+@media(max-width:640px){.mp{grid-template-columns:1fr}.mp .ph{min-height:0;aspect-ratio:1/1}}
+.map iframe{width:100%;height:300px;border:0;margin-bottom:12px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:14px 0}
+.kpi{background:#fff;border:1px solid var(--bd);border-radius:6px;padding:16px;text-align:center}.kpi b{display:block;font:600 1.8rem "Cormorant Garamond",Georgia,serif}.kpi span{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--mu)}
+.arow{display:flex;gap:12px;align-items:center}.arow img,.arow span{width:52px;height:52px;border-radius:4px;object-fit:cover;background:var(--pks);display:grid;place-items:center;font-size:1.5rem}
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0}.tools input[type=search],.tools select{flex:1;min-width:170px}
 </style>
 </head>
 <body>
@@ -171,7 +198,8 @@ footer{border-top:3px solid var(--yl);padding:34px 14px}footer .logo{font-size:2
 <nav id="nav" aria-label="Principal"></nav>
 </div></header>
 <main id="app"></main>
-<footer><div class="wrap" style="text-align:center"><div class="logo">Chic <svg class="flor" aria-hidden="true" viewBox="0 0 24 24"><use href="#flor"/></svg> aura</div><p class="note" style="margin:0">Tienda virtual y física</p><div class="fl"><a href="#catalogo">Catálogo</a><a href="#novedades">Novedades</a><a href="https://www.instagram.com/chicaura_rd?xtok=MWdveW84eDlubnY5eQ==" target="_blank" rel="noopener">Instagram</a><a href="https://wa.me/18295142636" target="_blank" rel="noopener">WhatsApp</a></div><p class="note">© Chic aura · <a href="#admin">Administración</a></p></div></footer>
+<footer><div class="wrap" style="text-align:center"><div class="logo">Chic <svg class="flor" aria-hidden="true" viewBox="0 0 24 24"><use href="#flor"/></svg> aura</div><p class="note" style="margin:0">Tienda virtual y física</p><div class="fl"><a href="#catalogo">Catálogo</a><a href="#novedades">Novedades</a><a href="https://www.instagram.com/chicaura_rd?xtok=MWdveW84eDlubnY5eQ==" target="_blank" rel="noopener">Instagram</a><a href="https://wa.me/18295142636" target="_blank" rel="noopener">WhatsApp</a><a href="https://www.google.com/maps?q=18.5009651,-69.9293213" target="_blank" rel="noopener">Cómo llegar</a></div><p class="note">© Chic aura · <a href="#admin">Administración</a></p></div></footer>
+<div id="modal"></div>
 <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.1/dist/umd/supabase.min.js"></script>
@@ -181,6 +209,7 @@ const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;"
 const CATS=["Perfumes","Accesorios","Higiene y cuidado personal","Especiales","Carteras","Maquillaje","Ropa"];
 const EMO={"Perfumes":"🧴","Accesorios":"💍","Higiene y cuidado personal":"🧼","Especiales":"🎁","Carteras":"👜","Maquillaje":"💄","Ropa":"👗"};
 const WA="18295142636", WA_SHOW="+1 (829) 514-2636", IG="https://www.instagram.com/chicaura_rd?xtok=MWdveW84eDlubnY5eQ==";
+const MAPS="https://www.google.com/maps?q=18.5009651,-69.9293213";
 const money=n=>"RD$ "+Number(n||0).toLocaleString("es-DO",{maximumFractionDigits:2});
 const ls={get(k,d){try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 const uid=()=>"x"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
@@ -196,8 +225,8 @@ const SAMPLES=[
 ].map((a,i)=>({id:"m"+i,name:a[0],desc:"Producto de muestra. Reemplázalo desde el panel de administración.",cat:a[1],gender:a[2],price:a[3],stock:a[4],special:a[5]==="s",sale:a[5]==="o",sample:true}));
 const SAMPLE_NEWS=[{id:"mn",title:"¡Bienvenida a Chic Aura!",text:"Aquí publicaremos anuncios, nuevos productos y promociones. (Publicación de muestra.)",date:new Date().toISOString().slice(0,10),sample:true}];
 
-let S={products:[],news:[],orders:[],cfg:{low:5,channel:""},view:"catalogo",cat:CATS[0],g:"",q:"",cart:ls.get("ca_cart",{}),admin:false,db:null,aTab:"p",edit:null,sent:null};
-const prods=()=>S.products.length?S.products:SAMPLES;
+let S={products:[],news:[],orders:[],cfg:{low:5,channel:""},view:"catalogo",cat:"",g:"",q:"",sort:"new",offer:false,avail:false,fo:false,detail:null,aq:"",oq:"",of:"",n:0,cart:ls.get("ca_cart",{}),admin:false,db:null,aTab:"r",edit:null,sent:null};
+const prods=()=>S.products.length?S.products.filter(p=>p.visible!==false):SAMPLES;
 const news=()=>(S.news.length?S.news:SAMPLE_NEWS).slice().sort((a,b)=>(b.date||"").localeCompare(a.date||""));
 
 /* ---- Supabase: pega aquí tus datos (Project Settings → API). La clave "anon" es pública por diseño; NUNCA uses la service_role. ---- */
@@ -262,30 +291,51 @@ const locHtml=l=>esc(l).replace(/(https?:\/\/[^\s<]+)/g,u=>'<a href="'+u+'" targ
 function render(){
   const v=S.view, tabs=[["catalogo","Catálogo"],["novedades","Novedades"],["carrito","Carrito"],["contacto","Contáctanos"]];
   $("#nav").innerHTML=tabs.map(t=>'<button data-a="go" data-id="'+t[0]+'"'+(v===t[0]?' aria-current="page"':"")+'>'+t[1]+(t[0]==="carrito"&&cartCount()?'<span class="cnt">'+cartCount()+"</span>":"")+"</button>").join("");
-  $("#app").innerHTML=({catalogo:vCat,novedades:vNews,carrito:vCart,contacto:vContact,admin:vAdmin})[v]();
+  $("#app").innerHTML=({catalogo:vCat,novedades:vNews,carrito:vCart,contacto:vContact,admin:vAdmin})[v]();renderModal();
 }
-function gridHtml(){
-  let l=prods().filter(p=>p.cat===S.cat);
-  if(S.cat!=="Maquillaje"&&S.g) l=l.filter(p=>p.gender===S.g||p.gender==="b");
-  const q=S.q.trim().toLowerCase(); if(q) l=l.filter(p=>(p.name+" "+(p.desc||"")).toLowerCase().includes(q));
-  if(!l.length) return '<p class="note">No encontramos productos con esos filtros.</p>';
-  return l.map(card).join("");
+const FLOR='<svg class="flor" aria-hidden="true" viewBox="0 0 24 24"><use href="#flor"/></svg>';
+const isNew=p=>p.created_at&&Date.now()-new Date(p.created_at)<14*864e5;
+const gl=p=>({h:"♂ Hombres",m:"♀ Mujeres",b:"⚧ Hombres y mujeres"}[p.gender]||"");
+const price=p=>(p.old_price>p.price?'<s class="old">'+money(p.old_price)+'</s> ':"")+money(p.price);
+const cn=()=>S.n+(S.n===1?" producto":" productos");
+function list(){
+  let l=prods().filter(p=>!S.cat||p.cat===S.cat);
+  if(S.g)l=l.filter(p=>p.cat==="Maquillaje"||p.gender===S.g||p.gender==="b");
+  const q=S.q.trim().toLowerCase();if(q)l=l.filter(p=>(p.name+" "+(p.desc||"")+" "+p.cat).toLowerCase().includes(q));
+  if(S.offer)l=l.filter(p=>p.sale||p.special);
+  if(S.avail)l=l.filter(p=>p.stock>0);
+  const f={price:(a,b)=>a.price-b.price,priced:(a,b)=>b.price-a.price,name:(a,b)=>a.name.localeCompare(b.name,"es"),new:(a,b)=>String(b.created_at||"").localeCompare(String(a.created_at||""))}[S.sort];
+  return f?l.slice().sort(f):l;
 }
+function gridHtml(){const l=list();S.n=l.length;return l.length?l.map(card).join(""):'<p class="note">No encontramos productos con esos filtros.</p>'}
 function card(p){const inC=S.cart[p.id]||0,full=p.stock<=0||inC>=p.stock;
-    return '<article class="card'+(p.special?" sp":"")+'">'+(p.sale?'<span class="badge">OFERTA</span>':"")+(p.special?'<span class="badge s">ESPECIAL</span>':"")+(p.sample?'<span class="badge m">Muestra</span>':"")+
-    '<div class="ph">'+img(p)+'</div><div class="cb"><div class="eb">'+esc(p.cat)+'</div><div class="pn">'+esc(p.name)+'</div>'+(p.cat!=="Maquillaje"?'<div class="note">'+({h:"♂ Hombres",m:"♀ Mujeres",b:"⚧ Hombres y mujeres"}[p.gender]||"")+'</div>':"")+'<div class="note">'+esc(p.desc||"")+'</div><div class="pr">'+money(p.price)+"</div>"+avail(p)+
-    '<button class="btn" style="margin-top:auto" data-a="add" data-id="'+esc(p.id)+'"'+(full?" disabled":"")+">"+(p.stock<=0?"Agotado":full?"Máximo en carrito":"Agregar al carrito")+"</button></div></article>";
+  return '<article class="card'+(p.special?" sp":"")+'"><div class="bdg">'+(p.sale?'<span class="badge">OFERTA</span>':"")+(isNew(p)?'<span class="badge n">NUEVO</span>':"")+(p.sample?'<span class="badge m">Muestra</span>':"")+'</div>'+(p.special?'<span class="badge s">ESPECIAL</span>':"")+
+  '<div class="ph" data-a="detail" data-id="'+esc(p.id)+'" role="button" tabindex="0" aria-label="Ver detalle de '+esc(p.name)+'">'+img(p)+'</div><div class="cb"><div class="eb">'+esc(p.cat)+'</div><div class="pn">'+esc(p.name)+'</div>'+(p.cat!=="Maquillaje"?'<div class="note">'+gl(p)+'</div>':"")+'<div class="pr">'+price(p)+'</div>'+avail(p)+
+  '<button class="btn" data-a="add" data-id="'+esc(p.id)+'"'+(full?" disabled":"")+'>'+(p.stock<=0?"Agotado":full?"Máximo en carrito":"Agregar al carrito")+'</button></div></article>';
+}
+function side(){
+  const sub=c=>(S.cat===c&&c!=="Maquillaje")?'<div class="sub"><button class="gbtn h" data-a="g" data-id="h" aria-pressed="'+(S.g==="h")+'">Hombres</button><button class="gbtn m" data-a="g" data-id="m" aria-pressed="'+(S.g==="m")+'">Mujeres</button></div>':"";
+  return '<aside class="side"><button class="btn o sm fbtn" data-a="ftoggle" aria-expanded="'+S.fo+'">☰ Filtros y búsqueda</button><div class="fp'+(S.fo?" open":"")+'">'+
+  '<label class="sr" for="q">Buscar</label><input id="q" data-in="q" type="search" placeholder="🔍 Buscar producto…" value="'+esc(S.q)+'">'+
+  '<p class="eb">Categorías</p><button class="cat'+(!S.cat?" on":"")+'" data-a="cat" data-id="">Todo el catálogo</button>'+
+  CATS.map(c=>'<button class="cat'+(S.cat===c?" on":"")+'" data-a="cat" data-id="'+esc(c)+'" aria-expanded="'+(S.cat===c)+'"><span>'+EMO[c]+" "+c+"</span>"+(c!=="Maquillaje"?"<i>"+(S.cat===c?"−":"+")+"</i>":"")+"</button>"+sub(c)).join("")+
+  '<p class="eb">Ordenar por</p><select data-in="sort" aria-label="Ordenar por">'+[["new","Más nuevos"],["price","Precio: menor a mayor"],["priced","Precio: mayor a menor"],["name","Nombre A–Z"]].map(o=>'<option value="'+o[0]+'"'+(S.sort===o[0]?" selected":"")+">"+o[1]+"</option>").join("")+"</select>"+
+  '<label class="ck"><input type="checkbox" data-in="offer"'+(S.offer?" checked":"")+'> Solo ofertas y especiales</label><label class="ck"><input type="checkbox" data-in="avail"'+(S.avail?" checked":"")+'> Solo disponibles</label>'+
+  '<button class="btn o sm" data-a="clear">Limpiar filtros</button></div></aside>';
 }
 function vCat(){
-  const sp=prods().filter(p=>p.special);
-  return '<section class="hero"><img src="'+document.querySelector(".brand img").src+'" alt="" width="132" height="132"><p class="eyebrow">Tienda virtual y física</p><h1>Chic <svg class="flor" aria-hidden="true" viewBox="0 0 24 24"><use href="#flor"/></svg> aura</h1><div class="orn">✿ ✿ ✿</div><p class="lead">Perfumes, accesorios, carteras, maquillaje y ropa en un solo lugar.</p><div class="hbtn"><button class="btn" data-a="scroll">Ver catálogo</button><button class="btn o" data-a="go" data-id="novedades">Novedades</button></div></section>'+
+  const sp=prods().filter(p=>p.special),g=gridHtml();
+  return '<section class="hero"><img src="'+document.querySelector(".brand img").src+'" alt="" width="132" height="132"><p class="eyebrow">Tienda virtual y física</p><h1>Chic '+FLOR+' aura</h1><div class="orn">✿ ✿ ✿</div><p class="lead">Perfumes, accesorios, carteras, maquillaje y ropa en un solo lugar.</p><div class="hbtn"><button class="btn" data-a="scroll">Ver catálogo</button><button class="btn o" data-a="go" data-id="novedades">Novedades</button></div></section>'+
   '<section class="feat"><div><span class="fi">📲</span><b>Pide por WhatsApp</b><span class="note">Prepara tu pedido y envíalo en un toque.</span></div><div><span class="fi">🛵</span><b>Delivery o retiro</b><span class="note">Tú eliges cómo recibirlo.</span></div><div><span class="fi">💵</span><b>Efectivo o transferencia</b><span class="note">Sin pagos en línea.</span></div></section>'+
   (sp.length?'<section><p class="eyebrow">Selección destacada</p><h2>Especiales</h2><p class="note">Los reconoces por su marco amarillo.</p><div class="hrow">'+sp.map(card).join("")+"</div></section>":"")+
-  '<section id="cat-sec"><p class="eyebrow">Colecciones</p><h2>Catálogo</h2><div class="chips" role="group" aria-label="Categorías">'+CATS.map(c=>'<button class="chip" data-a="cat" data-id="'+esc(c)+'" aria-pressed="'+(S.cat===c)+'"><span class="ce">'+EMO[c]+"</span>"+c+"</button>").join("")+"</div>"+
-  '<h3 class="cname">'+esc(S.cat)+"</h3>"+
-  (S.cat!=="Maquillaje"?'<div class="gf" role="group" aria-label="Filtrar por género"><button class="gbtn h" data-a="g" data-id="h" aria-pressed="'+(S.g==="h")+'">Hombres</button><button class="gbtn m" data-a="g" data-id="m" aria-pressed="'+(S.g==="m")+'">Mujeres</button></div>':"")+
-  '<label class="sr" for="q">Buscar</label><input id="q" data-in="q" type="search" placeholder="🔍 Buscar producto…" value="'+esc(S.q)+'"><div class="grid" id="grid">'+gridHtml()+"</div></section>"+
-  '<section class="visit"><p class="eyebrow">Tienda física y virtual</p><h2>Escríbenos, te ayudamos a elegir</h2><p class="note">Compra desde la página o coordina tu pedido por WhatsApp.</p><a class="btn g" target="_blank" rel="noopener" href="https://wa.me/'+WA+'">WhatsApp</a> <a class="btn o" target="_blank" rel="noopener" href="'+IG+'">Instagram</a></section>';
+  '<section id="cat-sec"><p class="eyebrow">Colecciones</p><h2>Catálogo</h2><div class="shop">'+side()+'<div class="res"><div class="rhead"><b id="cnt">'+cn()+"</b>"+(S.cat?'<span class="note"> · '+esc(S.cat)+(S.g?" · "+(S.g==="h"?"Hombres":"Mujeres"):"")+"</span>":"")+'</div><div class="grid" id="grid">'+g+"</div></div></div></section>"+
+  '<section class="visit"><p class="eyebrow">Tienda física y virtual</p><h2>Visítanos o escríbenos</h2><p class="note">Compra desde la página o coordina tu pedido por WhatsApp.</p><a class="btn" target="_blank" rel="noopener" href="'+MAPS+'">Cómo llegar</a> <a class="btn g" target="_blank" rel="noopener" href="https://wa.me/'+WA+'">WhatsApp</a> <a class="btn o" target="_blank" rel="noopener" href="'+IG+'">Instagram</a></section>';
+}
+function renderModal(){
+  const m=$("#modal"),p=S.detail&&prods().find(x=>x.id===S.detail);
+  if(!p){m.innerHTML="";document.body.style.overflow="";return}
+  const inC=S.cart[p.id]||0,full=p.stock<=0||inC>=p.stock;document.body.style.overflow="hidden";
+  m.innerHTML='<div class="mo" data-a="close"><div class="mp" role="dialog" aria-modal="true" aria-label="'+esc(p.name)+'"><button class="x" data-a="close" aria-label="Cerrar">✕</button><div class="ph">'+img(p)+'</div><div class="mi"><div class="eb">'+esc(p.cat)+"</div><h2>"+esc(p.name)+"</h2>"+(p.cat!=="Maquillaje"?'<div class="note">'+gl(p)+"</div>":"")+'<div class="pr" style="font-size:1.4rem">'+price(p)+"</div>"+avail(p)+"<p>"+esc(p.desc||"").replace(/\n/g,"<br>")+'</p><button class="btn" data-a="add" data-id="'+esc(p.id)+'"'+(full?" disabled":"")+">"+(p.stock<=0?"Agotado":full?"Máximo en carrito":"Agregar al carrito")+'</button> <a class="btn o" target="_blank" rel="noopener" href="https://wa.me/'+WA+"?text="+encodeURIComponent("Hola Chic aura, me interesa: "+p.name)+'">Consultar por WhatsApp</a></div></div></div>';
 }
 function vNews(){
   return "<h1>Novedades</h1>"+news().map(n=>'<article class="box news">'+(n.img?'<img src="'+esc(n.img)+'" alt="">':"")+"<h3>"+esc(n.title)+'</h3><div class="note">'+esc(n.date||"")+(n.sample?" · Muestra":"")+"</div><p>"+esc(n.text).replace(/\n/g,"<br>")+"</p></article>").join("");
@@ -304,43 +354,65 @@ function vCart(){
 function vContact(){
   const ch=S.cfg.channel;
   return '<h1>Contáctanos</h1><div class="box"><h3>💬 WhatsApp</h3><p>'+WA_SHOW+'</p><a class="btn g" target="_blank" rel="noopener" href="https://wa.me/'+WA+'">Iniciar chat</a></div>'+
+  '<div class="box"><h3>📍 Tienda física</h3><p class="note">18°30′03.5″N 69°55′45.6″W</p><div class="map"><iframe title="Mapa de la tienda" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="'+MAPS+'&z=17&output=embed"></iframe></div><a class="btn" target="_blank" rel="noopener" href="'+MAPS+'">Cómo llegar</a></div>'+
   '<div class="box"><h3>📸 Instagram</h3><a class="btn" target="_blank" rel="noopener" href="'+IG+'">@chicaura_rd</a></div>'+
-  '<div class="box"><h3>📣 Canal de difusión de WhatsApp</h3>'+(ch?'<a class="btn y" target="_blank" rel="noopener" href="'+esc(ch)+'">Unirme al canal</a>':'<p><b>Próximamente</b></p>')+"</div>";
+  '<div class="box"><h3>📣 Canal de difusión de WhatsApp</h3>'+(ch?'<a class="btn y" target="_blank" rel="noopener" href="'+esc(ch)+'">Unirme al canal</a>':"<p><b>Próximamente</b></p>")+"</div>";
 }
 function pf(){const e=S.edit,v=k=>esc(e[k]==null?"":e[k]);
-  return '<div class="box"><h3>'+(e.id?"Editar":"Nuevo")+' producto</h3><label>Nombre</label><input id="f-name" value="'+v("name")+'"><label>Descripción</label><textarea id="f-desc" rows="2">'+v("desc")+'</textarea>'+
+  return '<div class="box"><h3>'+(e.id?"Editar":"Nuevo")+' producto</h3><label>Nombre</label><input id="f-name" value="'+v("name")+'"><label>Descripción</label><textarea id="f-desc" rows="3">'+v("desc")+'</textarea>'+
   '<label>Categoría</label><select id="f-cat" data-in="fcat">'+CATS.map(c=>"<option"+(e.cat===c?" selected":"")+">"+c+"</option>").join("")+"</select>"+
   '<div id="f-gw"'+(e.cat==="Maquillaje"?" hidden":"")+'><label>Para</label><select id="f-g">'+[["b","Hombres y mujeres"],["h","Hombres"],["m","Mujeres"]].map(o=>'<option value="'+o[0]+'"'+((e.gender||"b")===o[0]?" selected":"")+">"+o[1]+"</option>").join("")+"</select></div>"+
-  '<div class="row" style="justify-content:stretch"><div style="flex:1"><label>Precio (RD$)</label><input id="f-price" type="number" min="0" step="0.01" value="'+v("price")+'"></div><div style="flex:1"><label>Cantidad disponible</label><input id="f-stock" type="number" min="0" step="1" value="'+v("stock")+'"></div></div>'+
-  '<label><input style="width:auto;min-height:0" type="checkbox" id="f-sale"'+(e.sale?" checked":"")+"> En oferta</label><label><input style=\"width:auto;min-height:0\" type=\"checkbox\" id=\"f-sp\""+(e.special?" checked":"")+"> Especial</label>"+
+  '<div class="row" style="justify-content:stretch"><div style="flex:1"><label>Precio (RD$)</label><input id="f-price" type="number" min="0" step="0.01" value="'+v("price")+'"></div><div style="flex:1"><label>Precio anterior (opcional, sale tachado)</label><input id="f-old" type="number" min="0" step="0.01" value="'+v("old_price")+'"></div><div style="flex:1"><label>Cantidad disponible</label><input id="f-stock" type="number" min="0" step="1" value="'+v("stock")+'"></div></div>'+
+  '<label class="ck"><input type="checkbox" id="f-sale"'+(e.sale?" checked":"")+'> En oferta</label><label class="ck"><input type="checkbox" id="f-sp"'+(e.special?" checked":"")+'> Especial</label><label class="ck"><input type="checkbox" id="f-hid"'+(e.visible===false?" checked":"")+'> Ocultar de la tienda</label>'+(e.id?"":'<label class="ck"><input type="checkbox" id="f-ann" checked> Anunciarlo en Novedades</label>')+
   '<label>Imagen</label><input type="file" accept="image/*" data-in="fimg">'+(e.img?'<div class="ph" style="width:120px;margin-top:6px"><img src="'+esc(e.img)+'" alt=""></div>':"")+
   '<p><button class="btn" data-a="psave">Guardar producto</button> <button class="btn o" data-a="pcancel">Cancelar</button></p></div>';}
 function nf(){const e=S.edit,v=k=>esc(e[k]==null?"":e[k]);
   return '<div class="box"><h3>'+(e.id?"Editar":"Nueva")+' publicación</h3><label>Título</label><input id="n-title" value="'+v("title")+'"><label>Texto</label><textarea id="n-text" rows="4">'+v("text")+'</textarea><label>Fecha</label><input id="n-date" type="date" value="'+(e.date||new Date().toISOString().slice(0,10))+'"><label>Imagen</label><input type="file" accept="image/*" data-in="fimg">'+(e.img?'<div class="ph" style="width:120px;margin-top:6px"><img src="'+esc(e.img)+'" alt=""></div>':"")+'<p><button class="btn" data-a="nsave">Publicar</button> <button class="btn o" data-a="pcancel">Cancelar</button></p></div>';}
+const ST={pendiente:"⏳ Esperando mensaje de WhatsApp",recibido:"✅ Recibido",entregado:"📦 Entregado",cancelado:"✖ Cancelado"};
+const ords=()=>S.orders.slice().sort((a,b)=>String(b.at||"").localeCompare(String(a.at||"")));
+function csvDown(n,rows){const t=rows.map(r=>r.map(v=>'"'+String(v==null?"":v).replace(/"/g,'""')+'"').join(",")).join("\n");const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\ufeff"+t],{type:"text/csv"}));a.download=n;a.click()}
+function parseCsv(t){const rows=[];let r=[],c="",q=false;for(let i=0;i<t.length;i++){const ch=t[i];if(q){if(ch==='"'){if(t[i+1]==='"'){c+='"';i++}else q=false}else c+=ch}else if(ch==='"')q=true;else if(ch===","||ch===";"){r.push(c);c=""}else if(ch==="\n"){r.push(c);rows.push(r);r=[];c=""}else if(ch!=="\r")c+=ch}if(c||r.length){r.push(c);rows.push(r)}return rows}
+function plist(){const q=(S.aq||"").toLowerCase(),l=S.products.filter(p=>!q||(p.name+" "+p.cat).toLowerCase().includes(q));
+  return l.length?l.map(p=>'<div class="box row"><div class="arow">'+(p.img?'<img src="'+esc(p.img)+'" alt="">':"<span>"+EMO[p.cat]+"</span>")+'<div><b>'+esc(p.name)+'</b><div class="note">'+esc(p.cat)+" · "+money(p.price)+(p.sale?" · Oferta":"")+(p.special?" · Especial":"")+(p.visible===false?" · Oculto":"")+'</div></div></div><div class="qty"><button data-a="sadj" data-id="'+esc(p.id)+'" data-d="-1" aria-label="Quitar una unidad">−</button><b>'+p.stock+(p.stock<=S.cfg.low?" ⚠️":"")+'</b><button data-a="sadj" data-id="'+esc(p.id)+'" data-d="1" aria-label="Agregar una unidad">+</button></div><div><button class="btn sm o" data-a="pedit" data-id="'+esc(p.id)+'">Editar</button> <button class="btn sm o" data-a="pdup" data-id="'+esc(p.id)+'">Duplicar</button> <button class="btn sm r" data-a="pdel" data-id="'+esc(p.id)+'">Eliminar</button></div></div>').join(""):'<p class="note">Sin resultados.</p>';}
+function olist(){const q=(S.oq||"").toLowerCase(),l=ords().filter(o=>(!S.of||o.status===S.of)&&(!q||String(o.name).toLowerCase().includes(q)));
+  return l.length?l.map(o=>'<div class="box"><div class="row"><b>'+esc(o.name)+"</b><span>"+money(o.total)+" · "+esc(o.pay)+"</span></div><ul>"+(o.items||[]).map(i=>"<li>"+i.qty+" × "+esc(i.name)+" — "+money(i.qty*i.price)+"</li>").join("")+"</ul><p>"+(o.delivery?"🛵 <b>Delivery:</b> "+locHtml(o.location):"🏬 Retiro en tienda")+'</p><div class="row"><span class="note">'+new Date(o.at).toLocaleString("es-DO")+" · "+(ST[o.status]||esc(o.status))+"</span><span>"+
+  (o.status==="pendiente"?'<button class="btn sm g" data-a="ostat" data-id="'+esc(o.id)+'" data-s="recibido">Marcar recibido</button> <button class="btn sm o" data-a="ostat" data-id="'+esc(o.id)+'" data-s="cancelado">Cancelar</button> ':"")+(o.status==="recibido"?'<button class="btn sm" data-a="ostat" data-id="'+esc(o.id)+'" data-s="entregado">Marcar entregado</button> ':"")+'<button class="btn sm r" data-a="odel" data-id="'+esc(o.id)+'">Eliminar</button></span></div></div>').join(""):'<p class="note">No hay pedidos con esos filtros.</p>';}
 function vAdmin(){
-  if(!S.admin) return '<h1>Administración</h1><div class="box"><p>🔒 Panel protegido. Inicia sesión con la cuenta de administración.</p>'+(sb?'<label for="lg-e">Correo</label><input id="lg-e" type="email" autocomplete="username"><label for="lg-p">Contraseña</label><input id="lg-p" type="password" autocomplete="current-password"><p><button class="btn" data-a="login">Entrar</button></p>':'<p class="note">'+(cfgOk?"No se pudo conectar con Supabase. Revisa tu conexión o desactiva el bloqueador de anuncios, y recarga la página.":"Supabase aún no está configurado: falta pegar tu URL y tu clave en index.html.")+'</p>')+'<button class="btn" data-a="go" data-id="catalogo">Volver a la tienda</button></div>';
-  const low=S.products.filter(p=>p.stock<=S.cfg.low);
-  const T=[["p","Productos"],["n","Novedades"],["o","Pedidos"+(S.orders.length?" ("+S.orders.length+")":"")],["c","Ajustes"]];
+  if(!S.admin) return '<h1>Administración</h1><div class="box"><p>🔒 Panel protegido. Inicia sesión con la cuenta de administración.</p>'+(sb?'<label for="lg-e">Correo</label><input id="lg-e" type="email" autocomplete="username"><label for="lg-p">Contraseña</label><input id="lg-p" type="password" autocomplete="current-password"><p><button class="btn" data-a="login">Entrar</button></p>':'<p class="note">'+(cfgOk?"No se pudo conectar con Supabase. Revisa tu conexión o desactiva el bloqueador de anuncios, y recarga la página.":"Supabase aún no está configurado: falta pegar tu URL y tu clave en index.html.")+"</p>")+'<button class="btn" data-a="go" data-id="catalogo">Volver a la tienda</button></div>';
+  const P=S.products,out=P.filter(p=>p.stock<=0),low=P.filter(p=>p.stock>0&&p.stock<=S.cfg.low),pe=S.orders.filter(o=>o.status==="pendiente"),ok=S.orders.filter(o=>o.status==="recibido"||o.status==="entregado");
+  const k=(l,v)=>'<div class="kpi"><b>'+v+"</b><span>"+l+"</span></div>";
+  const T=[["r","Resumen"],["p","Productos"],["n","Novedades"],["o","Pedidos"+(pe.length?" ("+pe.length+")":"")],["c","Ajustes"]];
   let b="";
-  if(S.aTab==="p"){
-    b=(low.length?'<div class="alert" role="alert">⚠️ <b>Inventario bajo</b> (umbral: '+S.cfg.low+" o menos): "+low.map(p=>esc(p.name)+" ("+p.stock+")").join(", ")+"</div>":"")+
-    (S.edit&&S.aTab==="p"?pf():'<p><button class="btn" data-a="pnew">+ Nuevo producto</button> '+(S.products.length?"":'<button class="btn o" data-a="seed">Cargar ejemplos para editar</button>')+"</p>")+
-    (S.products.length?'<div class="tbl">'+S.products.map(p=>'<div class="box row"><div><b>'+esc(p.name)+'</b><div class="note">'+esc(p.cat)+" · "+money(p.price)+" · stock "+p.stock+(p.stock<=S.cfg.low?" ⚠️":"")+(p.sale?" · Oferta":"")+(p.special?" · Especial":"")+'</div></div><div><button class="btn sm o" data-a="pedit" data-id="'+esc(p.id)+'">Editar</button> <button class="btn sm r" data-a="pdel" data-id="'+esc(p.id)+'">Eliminar</button></div></div>').join("")+"</div>":'<p class="note">Aún no hay productos reales. La tienda muestra productos de muestra hasta que agregues los tuyos.</p>');
+  if(S.aTab==="r"){
+    b='<div class="kpis">'+k("Productos",P.length)+k("Agotados",out.length)+k("Stock bajo",low.length)+k("Pedidos pendientes",pe.length)+k("Ventas confirmadas",money(ok.reduce((a,o)=>a+Number(o.total||0),0)))+"</div>"+
+    (out.length||low.length?'<div class="alert" role="alert">⚠️ <b>Inventario</b><br>'+(out.length?"Agotados: "+out.map(p=>esc(p.name)).join(", ")+"<br>":"")+(low.length?"Quedan pocas ("+S.cfg.low+" o menos): "+low.map(p=>esc(p.name)+" ("+p.stock+")").join(", "):"")+"</div>":'<p class="note">✅ Sin alertas de inventario.</p>')+
+    "<h3>Últimos pedidos</h3>"+(S.orders.length?ords().slice(0,5).map(o=>'<div class="box row"><span><b>'+esc(o.name)+"</b> · "+(o.delivery?"🛵":"🏬")+" · "+money(o.total)+'</span><span class="note">'+(ST[o.status]||"")+"</span></div>").join(""):'<p class="note">Todavía no hay pedidos.</p>');
+  }else if(S.aTab==="p"){
+    b=(S.edit?pf():'<div class="tools"><button class="btn" data-a="pnew">+ Nuevo producto</button><label class="btn o sm" style="margin:0">Importar CSV<input type="file" accept=".csv,text/csv" data-in="csvin" class="sr"></label><button class="btn o sm" data-a="pcsv">Exportar CSV</button>'+(S.products.length?"":'<button class="btn o sm" data-a="seed">Cargar ejemplos</button>')+'</div><div class="tools"><input type="search" data-in="aq" placeholder="🔍 Buscar en mis productos…" value="'+esc(S.aq||"")+'"></div><p class="note">Usa − y + para ajustar el inventario al instante. El CSV lleva las columnas: nombre, descripcion, categoria, genero, precio, cantidad.</p><div id="alist">'+plist()+"</div>");
   }else if(S.aTab==="n"){
     b=(S.edit?nf():'<p><button class="btn" data-a="nnew">+ Nueva publicación</button></p>')+S.news.map(n=>'<div class="box row"><div><b>'+esc(n.title)+'</b><div class="note">'+esc(n.date||"")+'</div></div><div><button class="btn sm o" data-a="nedit" data-id="'+esc(n.id)+'">Editar</button> <button class="btn sm r" data-a="ndel" data-id="'+esc(n.id)+'">Quitar</button></div></div>').join("");
   }else if(S.aTab==="o"){
-    b=S.orders.length?S.orders.slice().sort((a,b)=>(b.at||"").localeCompare(a.at||"")).map(o=>'<div class="box"><div class="row"><b>'+esc(o.name)+"</b><span>"+money(o.total)+" · "+esc(o.pay)+'</span></div><ul>'+(o.items||[]).map(i=>"<li>"+i.qty+" × "+esc(i.name)+" — "+money(i.qty*i.price)+"</li>").join("")+'</ul><p>'+(o.delivery?'🛵 <b>Delivery:</b> '+locHtml(o.location):'🏬 Retiro en tienda')+'</p><div class="row"><span class="note">'+new Date(o.at).toLocaleString("es-DO")+" · "+(o.status==="recibido"?"✅ Recibido":"⏳ Esperando mensaje de WhatsApp")+'</span><span>'+(o.status!=="recibido"?'<button class="btn sm g" data-a="orecv" data-id="'+esc(o.id)+'">Marcar recibido</button> ':"")+'<button class="btn sm r" data-a="odel" data-id="'+esc(o.id)+'">Eliminar</button></span></div></div>').join(""):'<p class="note">Todavía no hay pedidos. Los pedidos aparecen aquí cuando un cliente los prepara; confírmalos al recibir su mensaje de WhatsApp.</p>';
+    b='<div class="tools"><input type="search" data-in="oq" placeholder="🔍 Buscar por nombre…" value="'+esc(S.oq||"")+'"><select data-in="of" aria-label="Estado">'+[["","Todos"],["pendiente","Pendientes"],["recibido","Recibidos"],["entregado","Entregados"],["cancelado","Cancelados"]].map(o=>'<option value="'+o[0]+'"'+(S.of===o[0]?" selected":"")+">"+o[1]+"</option>").join("")+'</select><button class="btn o sm" data-a="ocsv">Exportar CSV</button></div><p class="note">Al marcar un pedido como recibido, el inventario se descuenta automáticamente.</p><div id="olist">'+olist()+"</div>";
   }else{
     b='<div class="box"><label>Alertar cuando queden este número de unidades o menos</label><input id="c-low" type="number" min="0" value="'+S.cfg.low+'"><label>Enlace del canal de difusión de WhatsApp (vacío = “Próximamente”)</label><input id="c-ch" type="url" value="'+esc(S.cfg.channel||"")+'" placeholder="https://whatsapp.com/channel/…"><p><button class="btn" data-a="csave">Guardar ajustes</button></p></div>';
   }
-  return '<h1>Administración</h1>'+(sb?'<p><button class="btn sm o" data-a="logout">Cerrar sesión</button></p>':'<div class="alert">Modo local: Supabase aún no está configurado, así que los cambios se guardan solo en este navegador.</div>')+'<div class="tabs">'+T.map(t=>'<button class="chip" data-a="atab" data-id="'+t[0]+'" aria-pressed="'+(S.aTab===t[0])+'">'+t[1]+"</button>").join("")+"</div>"+b;
+  return "<h1>Administración</h1>"+(sb?'<p><button class="btn sm o" data-a="logout">Cerrar sesión</button></p>':'<div class="alert">Modo local: Supabase aún no está configurado, así que los cambios se guardan solo en este navegador.</div>')+'<div class="tabs">'+T.map(t=>'<button class="chip" data-a="atab" data-id="'+t[0]+'" aria-pressed="'+(S.aTab===t[0])+'">'+t[1]+"</button>").join("")+"</div>"+b;
 }
 
 /* ---- Acciones ---- */
 const A={
   go(id){S.view=id;S.sent=null;S.edit=null;location.hash=id;render();scrollTo(0,0)},
   scroll(){document.getElementById("cat-sec").scrollIntoView({behavior:"smooth"})},
-  cat(id){S.cat=id;S.g="";render()},
+  cat(id){S.cat=S.cat===id?"":id;S.g="";render()},
+  detail(id){S.detail=id;renderModal()},
+  close(){S.detail=null;renderModal()},
+  ftoggle(){S.fo=!S.fo;render()},
+  clear(){S.cat="";S.g="";S.q="";S.offer=false;S.avail=false;render()},
+  async sadj(id,t){const p=S.products.find(x=>x.id===id);await put("products",Object.assign({},p,{stock:Math.max(0,p.stock+Number(t.dataset.d))}))},
+  pdup(id){const p=Object.assign({},S.products.find(x=>x.id===id));delete p.id;delete p.created_at;p.name+=" (copia)";S.edit=p;render();scrollTo(0,0)},
+  pcsv(){csvDown("productos-chic-aura.csv",[["nombre","descripcion","categoria","genero","precio","cantidad"]].concat(S.products.map(p=>[p.name,p.desc||"",p.cat,p.gender==="h"?"Hombres":p.gender==="m"?"Mujeres":"Ambos",p.price,p.stock])))},
+  ocsv(){csvDown("pedidos-chic-aura.csv",[["fecha","nombre","pago","entrega","ubicacion","total","estado","productos"]].concat(ords().map(o=>[o.at,o.name,o.pay,o.delivery?"Delivery":"Retiro",o.location||"",o.total,o.status,(o.items||[]).map(i=>i.qty+" x "+i.name).join("; ")])))},
+  async ostat(id,t){const o=S.orders.find(x=>x.id===id),st=t.dataset.s;if(st==="recibido"){for(const i of o.items||[]){const p=S.products.find(x=>x.id===i.id);if(p)await put("products",Object.assign({},p,{stock:Math.max(0,p.stock-i.qty)}),true)}}await put("orders",Object.assign({},o,{status:st}));toast("Pedido actualizado")},
   g(id){S.g=S.g===id?"":id;render()},
   add(id){const p=prods().find(x=>x.id===id);if(!p)return;const q=(S.cart[id]||0)+1;if(q>p.stock)return;S.cart[id]=q;saveCart();toast("✓ "+p.name+" agregado al carrito");render()},
   inc(id){A.add(id)},
@@ -350,7 +422,7 @@ const A={
     const it=cartItems(); if(!S.cname||!S.cname.trim()){toast("Escribe el nombre para la factura");$("#cn").focus();return}
     if(!S.pay){toast("Elige efectivo o transferencia");return}
     const dl=S.deliv==="1";if(dl&&!(S.loc||"").trim()){toast("Escribe la ubicación para el delivery");$("#loc").focus();return}
-    const o={name:S.cname.trim(),pay:S.pay,delivery:dl,location:dl?S.loc.trim():"",total:cartTotal(),items:it.map(i=>({name:i.name,qty:i.qty,price:i.price})),at:new Date().toISOString(),status:"pendiente"};
+    const o={name:S.cname.trim(),pay:S.pay,delivery:dl,location:dl?S.loc.trim():"",total:cartTotal(),items:it.map(i=>({id:i.id,name:i.name,qty:i.qty,price:i.price})),at:new Date().toISOString(),status:"pendiente"};
     const r=Channel.send(o);
     try{await put("orders",o,true)}catch(e){}
     S.sent={url:r.url,o};render();scrollTo(0,0);
@@ -364,10 +436,13 @@ const A={
   nedit(id){S.edit=Object.assign({},S.news.find(x=>x.id===id));render()},
   pcancel(){S.edit=null;render()},
   async psave(){
-    const n=$("#f-name").value.trim(); if(!n){toast("Falta el nombre");return}
-    const cat=$("#f-cat").value,e=S.edit;
+    const n=$("#f-name").value.trim();if(!n){toast("Falta el nombre");return}
+    const cat=$("#f-cat").value,e=S.edit,op=Number($("#f-old").value)||0,hid=$("#f-hid").checked;
     const o={id:e.id,name:n,desc:$("#f-desc").value.trim(),cat,gender:cat==="Maquillaje"?"b":$("#f-g").value,price:Number($("#f-price").value)||0,stock:Math.max(0,parseInt($("#f-stock").value)||0),sale:$("#f-sale").checked,special:$("#f-sp").checked};
-    if(e.img)o.img=e.img; await put("products",o);S.edit=null;toast("Producto guardado");render();
+    if(e.img)o.img=e.img;if("visible" in e||hid)o.visible=!hid;if("old_price" in e||op)o.old_price=op||null;
+    await put("products",o,true);
+    if(!e.id&&$("#f-ann")&&$("#f-ann").checked)await put("news",{title:"Nuevo: "+n,text:o.desc||"Ya disponible en Chic aura.",date:new Date().toISOString().slice(0,10),img:o.img},true);
+    S.edit=null;await load();render();toast("Producto guardado");
   },
   async pdel(id){if(confirm("¿Eliminar este producto?"))await del("products",id)},
   async login(){const {error}=await sb.auth.signInWithPassword({email:$("#lg-e").value.trim(),password:$("#lg-p").value});if(error){toast("Correo o contraseña incorrectos");return}await init()},
@@ -379,14 +454,20 @@ const A={
     await put("news",o);S.edit=null;toast("Publicación guardada");render();
   },
   async ndel(id){if(confirm("¿Quitar esta publicación?"))await del("news",id)},
-  async orecv(id){const o=S.orders.find(x=>x.id===id);await put("orders",Object.assign({},o,{status:"recibido"}))},
   async odel(id){if(confirm("¿Eliminar este pedido?"))await del("orders",id)},
   async csave(){S.cfg.low=Math.max(0,parseInt($("#c-low").value)||0);S.cfg.channel=$("#c-ch").value.trim();await saveCfg();toast("Ajustes guardados");render()}
 };
-document.addEventListener("click",e=>{const t=e.target.closest("[data-a]");if(t&&A[t.dataset.a])A[t.dataset.a](t.dataset.id)});
+document.addEventListener("click",e=>{const t=e.target.closest("[data-a]");if(!t||!A[t.dataset.a])return;if(t.dataset.a==="close"&&t.classList.contains("mo")&&e.target!==t)return;A[t.dataset.a](t.dataset.id,t)});
+addEventListener("keydown",e=>{if(e.key==="Escape"&&S.detail)A.close();if(e.key==="Enter"&&e.target.id==="lg-p"&&sb)A.login();if((e.key==="Enter"||e.key===" ")&&e.target.dataset&&e.target.dataset.a==="detail"){e.preventDefault();A.detail(e.target.dataset.id)}});
 document.addEventListener("input",e=>{
   const k=e.target.dataset.in; if(!k)return;
-  if(k==="q"){S.q=e.target.value;$("#grid").innerHTML=gridHtml()}
+  if(k==="q"){S.q=e.target.value;$("#grid").innerHTML=gridHtml();$("#cnt").textContent=cn()}
+  else if(k==="sort"){S.sort=e.target.value;render()}
+  else if(k==="offer"){S.offer=e.target.checked;render()}
+  else if(k==="avail"){S.avail=e.target.checked;render()}
+  else if(k==="aq"){S.aq=e.target.value;$("#alist").innerHTML=plist()}
+  else if(k==="oq"){S.oq=e.target.value;$("#olist").innerHTML=olist()}
+  else if(k==="of"){S.of=e.target.value;render()}
   else if(k==="cname")S.cname=e.target.value;
   else if(k==="pay")S.pay=e.target.value;
   else if(k==="deliv"){S.deliv=e.target.value;render()}
@@ -394,6 +475,13 @@ document.addEventListener("input",e=>{
   else if(k==="fcat"){const g=$("#f-gw");if(g)g.hidden=e.target.value==="Maquillaje"}
 });
 document.addEventListener("change",async e=>{
+  if(e.target.dataset.in==="csvin"&&e.target.files[0]){
+    const rows=parseCsv(await e.target.files[0].text()).filter(r=>r.some(c=>c.trim())),H=(rows.shift()||[]).map(h=>h.trim().toLowerCase());let n=0;
+    for(const r of rows){const g=(...ks)=>{for(const k of ks){const i=H.indexOf(k);if(i>=0)return(r[i]||"").trim()}return ""};
+      const name=g("nombre","name"),cat=CATS.find(c=>c.toLowerCase()===g("categoria","categoría","cat").toLowerCase());if(!name||!cat)continue;
+      const ge=g("genero","género","gender").toLowerCase();
+      try{await put("products",{name,desc:g("descripcion","descripción","descr"),cat,gender:cat==="Maquillaje"?"b":/hombre|^h$/.test(ge)?"h":/mujer|^m$/.test(ge)?"m":"b",price:Number(g("precio","price").replace(",","."))||0,stock:parseInt(g("cantidad","stock"))||0,sale:false,special:false},true);n++}catch(x){}}
+    e.target.value="";await load();render();toast(n+" productos importados");return}
   if(e.target.dataset.in==="fimg"&&e.target.files[0]){toast("Subiendo imagen…");S.edit.img=await upImg(e.target.files[0]);
     const keep={};document.querySelectorAll("#app input[id],#app textarea[id],#app select[id]").forEach(x=>keep[x.id]=x.type==="checkbox"?x.checked:x.value);
     render();for(const k in keep){const x=document.getElementById(k);if(x)x.type==="checkbox"?x.checked=keep[k]:x.value=keep[k]}toast("Imagen lista ✓")}
