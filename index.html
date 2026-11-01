@@ -193,6 +193,48 @@ footer{border-top:3px solid var(--yl);padding:34px 14px}footer .logo{font-size:2
 .brand,.brand *,header nav,.hero img,.ann,.btn,.chip,.cat,.gbtn,.badge,.flor{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
 .brand img,.hero img,.card .ph img{-webkit-user-drag:none;user-drag:none}
 .brand::selection,.brand *::selection,.hero img::selection{background:transparent}
+
+/* ---- Móvil: mejor distribución (la versión de PC no cambia) ---- */
+@media(max-width:800px){
+  .fp.open{border:1px solid var(--bd);border-radius:6px;padding:14px;background:#fff}
+  .fbtn{padding:13px}.cat{padding:14px 6px}
+}
+@media(max-width:640px){
+  html{-webkit-text-size-adjust:100%}
+  .ann{justify-content:center;text-align:center;font-size:.62rem;letter-spacing:.08em;padding:6px 10px}
+  .ann span:first-child{display:none}
+  .top{padding:8px 0 2px}.brand{gap:9px}.brand img{width:40px;height:40px}.logo{font-size:1.45rem}
+  nav{justify-content:stretch;overflow:visible;padding:0}
+  nav button{flex:1 1 0;min-width:0;padding:12px 2px;font-size:.64rem;letter-spacing:.06em}
+  main{padding:14px 14px 36px}
+  main>h1{font-size:2rem}main section>h2{font-size:1.8rem}
+  .hero{padding:28px 14px 26px;margin:-14px -14px 18px}
+  .hero img{width:104px;height:104px}.hero h1{font-size:2.6rem}
+  .lead{font-size:1.2rem;margin-bottom:18px}
+  .hbtn{flex-direction:column;align-items:stretch;gap:10px;max-width:320px;margin:0 auto}.hbtn .btn{width:100%}
+  .feat{grid-template-columns:1fr;gap:0;padding:0 0 14px;margin-bottom:24px;text-align:left}
+  .feat>div{display:grid;grid-template-columns:46px 1fr;column-gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--bd)}
+  .feat .fi{grid-row:1/3;font-size:1.6rem;text-align:center}.feat b{margin:0;font-size:1.15rem}.feat .note{font-size:.82rem}
+  .hrow{gap:14px;margin:0 -14px;padding:6px 14px 14px}.hrow .card{flex:0 0 158px}
+  .shop{margin-top:18px}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 12px;margin-top:14px}
+  .cb{padding:10px 0 0;gap:3px}.pn{font-size:1.05rem}.card .eb{font-size:.58rem;letter-spacing:.14em}
+  .card .note{font-size:.76rem}.pr{font-size:.95rem}.av{font-size:.74rem}
+  .card .btn{font-size:.62rem;letter-spacing:.1em;padding:10px 4px;margin-top:6px}
+  .badge{font-size:.56rem;padding:3px 7px}.bdg{top:6px;left:6px}.badge.s{top:6px;right:6px}
+  .visit{padding:30px 16px}.visit .btn{display:block;width:100%;margin:8px 0}
+  .box{padding:14px}
+  .crow{display:grid;grid-template-columns:auto 1fr auto;gap:10px 12px;align-items:center}
+  .crow>div:first-child{grid-column:1/-1}.crow>div:nth-child(3){text-align:right}
+  .pay{flex-direction:column}.pay label{flex:none}
+  .map iframe{height:240px}.kpis{grid-template-columns:repeat(2,1fr)}
+  .tools{flex-direction:column;align-items:stretch}.tools .btn{width:100%;text-align:center}
+  .mo{place-items:end center;padding:0}
+  .mp{max-height:92vh;overflow:auto;border-radius:14px 14px 0 0}
+  .mp .ph{aspect-ratio:4/3;min-height:0;height:auto}
+  .mi{padding:18px 16px 26px}.mi .btn{display:block;width:100%;margin-top:8px}
+  footer{padding:26px 14px}.fl{gap:12px 16px}
+}
 </style>
 </head>
 <body>
@@ -349,7 +391,7 @@ function vCart(){
   if(S.sent){const s=S.sent;return '<h1>Último paso: envía tu pedido por WhatsApp</h1><div class="box"><p><b>Tu pedido todavía no se ha enviado a la tienda.</b> Toca el botón, se abrirá WhatsApp con el mensaje listo y debes presionar <b>Enviar</b> para confirmarlo.</p><p><a class="btn g" href="'+esc(s.url)+'" target="_blank" rel="noopener">Abrir WhatsApp y enviar</a></p><p class="note">Resumen: '+esc(s.o.name)+" · "+money(s.o.total)+" · "+esc(s.o.pay)+(s.o.delivery?" · Delivery":" · Retiro en tienda")+'</p><button class="btn o" data-a="sentdone">Ya envié el mensaje</button> <button class="btn o" data-a="sentback">Volver al carrito</button></div>';}
   const it=cartItems();
   if(!it.length) return '<h1>Carrito</h1><div class="box"><p>Tu carrito está vacío.</p><button class="btn" data-a="go" data-id="catalogo">Ver catálogo</button></div>';
-  return "<h1>Carrito</h1>"+it.map(i=>'<div class="box row"><div><b>'+esc(i.name)+'</b><div class="note">'+money(i.price)+' c/u</div></div><div class="qty"><button data-a="dec" data-id="'+esc(i.id)+'" aria-label="Quitar una unidad">−</button><b>'+i.qty+'</b><button data-a="inc" data-id="'+esc(i.id)+'" aria-label="Agregar una unidad"'+(i.qty>=i.stock?" disabled":"")+'>+</button></div><div><b>'+money(i.qty*i.price)+'</b></div><button class="btn r sm" data-a="rm" data-id="'+esc(i.id)+'">Quitar</button></div>').join("")+
+  return "<h1>Carrito</h1>"+it.map(i=>'<div class="box row crow"><div><b>'+esc(i.name)+'</b><div class="note">'+money(i.price)+' c/u</div></div><div class="qty"><button data-a="dec" data-id="'+esc(i.id)+'" aria-label="Quitar una unidad">−</button><b>'+i.qty+'</b><button data-a="inc" data-id="'+esc(i.id)+'" aria-label="Agregar una unidad"'+(i.qty>=i.stock?" disabled":"")+'>+</button></div><div><b>'+money(i.qty*i.price)+'</b></div><button class="btn r sm" data-a="rm" data-id="'+esc(i.id)+'">Quitar</button></div>').join("")+
   '<div class="box"><div class="row"><span>Total del pedido</span><span class="tot">'+money(cartTotal())+'</span></div>'+
   '<label for="cn">Nombre de la persona a cuyo cargo se prepara la factura</label><input id="cn" data-in="cname" value="'+esc(S.cname||"")+'" autocomplete="name">'+
   '<label>Método de pago</label><div class="pay"><label><input type="radio" name="pay" value="Efectivo" data-in="pay"'+(S.pay==="Efectivo"?" checked":"")+'> 💵 Efectivo</label><label><input type="radio" name="pay" value="Transferencia" data-in="pay"'+(S.pay==="Transferencia"?" checked":"")+'> 🏦 Transferencia</label></div>'+
